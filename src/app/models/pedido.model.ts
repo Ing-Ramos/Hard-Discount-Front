@@ -4,7 +4,6 @@ export interface PedidoItem {
   precioUnitario: number;
   subtotal: number;
 }
-
 export interface Pedido {
   id?: number;
   usuarioId: number;

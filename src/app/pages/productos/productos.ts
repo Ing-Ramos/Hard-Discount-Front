@@ -22,16 +22,13 @@ export class ProductosComponent implements OnInit {
     private productosSvc: ProductosService,
     private authService: AuthService
   ) {}
-
   // Getter: verifica si el usuario es administrador
   get esAdmin(): boolean {
     return this.authService.hasRole('administrador');
   }
-
   ngOnInit(): void {
     this.cargar();
   }
-
   // Método de carga adaptado según el rol
   cargar(): void {
     this.productosSvc.getAll().subscribe({
@@ -42,23 +39,19 @@ export class ProductosComponent implements OnInit {
       error: err => console.error('Error cargando productos', err)
     });
   }
-
   abrirModalAgregar(): void {
     this.formProducto = { nombre: '', descripcion: '', precio: 0, stock: 0, activo: true };
     this.editando = false;
     this.modalVisible = true;
   }
-
   abrirModalEditar(p: Producto): void {
     this.formProducto = { ...p };
     this.editando = true;
     this.modalVisible = true;
   }
-
   cerrarModal(): void {
     this.modalVisible = false;
   }
-
   guardar(): void {
     if (this.editando && this.formProducto.id) {
       this.productosSvc.update(this.formProducto.id, this.formProducto).subscribe({
@@ -80,7 +73,6 @@ export class ProductosComponent implements OnInit {
       });
     }
   }
-
   eliminar(id?: number): void {
     if (!id) return;
     if (confirm('¿Seguro que deseas eliminar este producto?')) {

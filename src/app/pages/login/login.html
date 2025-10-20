@@ -3,14 +3,11 @@
     <h3 class="text-center mb-4 text-primary fw-bold">
       <i class="bi bi-box-seam me-2"></i> HardDiscount
     </h3>
-
     <h5 class="text-center mb-3 fw-semibold">Iniciar sesión</h5>
-
     <!-- Alerta de error -->
     <div *ngIf="errorMsg" class="alert alert-danger text-center py-2">
       {{ errorMsg }}
     </div>
-
     <!-- Formulario -->
     <form (ngSubmit)="ingresar()">
       <div class="mb-3">
@@ -25,7 +22,6 @@
           required
         />
       </div>
-
       <div class="mb-3">
         <label for="password" class="form-label fw-semibold">Contraseña</label>
         <input
@@ -38,7 +34,6 @@
           required
         />
       </div>
-
       <button
         type="submit"
         class="btn btn-primary w-100 fw-semibold mt-2"
@@ -48,7 +43,6 @@
         Ingresar
       </button>
     </form>
-
     <div class="text-center mt-3">
       <small class="text-muted">
         © 2025 HardDiscount — Sistema de Gestión

@@ -15,9 +15,7 @@ export class LoginComponent {
   credenciales = { correo: '', password: '' };
   cargando = false;
   errorMsg = '';
-
   constructor(private auth: AuthService, private router: Router) {}
-
   ingresar() {
     this.errorMsg = '';
 
@@ -25,9 +23,7 @@ export class LoginComponent {
       this.errorMsg = 'Completa correo y contraseña.';
       return;
     }
-
     this.cargando = true;
-
     this.auth.login(this.credenciales).subscribe({
       next: (res: any) => {
         if (!res?.token) {
@@ -35,7 +31,6 @@ export class LoginComponent {
           this.cargando = false;
           return;
         }
-
         this.auth.setToken(res.token);
         this.router.navigateByUrl('/pedidos');
       },

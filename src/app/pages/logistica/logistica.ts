@@ -20,28 +20,24 @@ export class LogisticaComponent {
     this.cargarPedidos();
     this.cargarEntregas();
   }
-
   cargarProductos() {
     this.http.get('http://localhost:4000/api/productos').subscribe({
       next: (data: any) => (this.productos = data),
       error: (err) => console.error('Error cargando productos:', err),
     });
   }
-
   cargarPedidos() {
     this.http.get('http://localhost:4000/api/pedidos').subscribe({
       next: (data: any) => (this.pedidos = data),
       error: (err) => console.error('Error cargando pedidos:', err),
     });
   }
-
   cargarEntregas() {
     this.http.get('http://localhost:4000/api/entregas').subscribe({
       next: (data: any) => (this.entregas = data),
       error: (err) => console.error('Error cargando entregas:', err),
     });
   }
-
   actualizarEstado(pedidoId: number, nuevoEstado: string) {
     this.http
       .put(`http://localhost:4000/api/pedidos/${pedidoId}`, { estado: nuevoEstado })
@@ -53,7 +49,6 @@ export class LogisticaComponent {
         error: (err) => console.error(err),
       });
   }
-
   marcarEntregado(entregaId: number) {
     this.http
       .put(`http://localhost:4000/api/entregas/${entregaId}`, { estado: 'Entregado' })

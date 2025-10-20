@@ -9,7 +9,6 @@ import { Producto } from '../models/producto.model';
 export class ProductosService {
   // URL del backend (asegurar que el backend esté corriendo en este puerto)
   private apiUrl = 'http://localhost:4000/api/productos';
-
   constructor(private http: HttpClient) {}
   // Obtener todos los productos
   getAll(): Observable<Producto[]> {

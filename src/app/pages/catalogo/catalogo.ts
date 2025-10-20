@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductosService } from '../../services/productos';
 import { Producto } from '../../models/producto.model';
-
 @Component({
   selector: 'app-catalogo',
   standalone: true,
@@ -13,13 +12,11 @@ import { Producto } from '../../models/producto.model';
 export class CatalogoComponent implements OnInit {
   productos: Producto[] = [];
   cargando = true;
-
   constructor(private productosSvc: ProductosService) {}
-
   ngOnInit(): void {
     this.productosSvc.getAll().subscribe({
       next: (data) => {
-        this.productos = data.filter(p => p.activo === true); // Solo productos activos
+        this.productos = data.filter(p => p.activo === true); 
         this.cargando = false;
       },
       error: (err) => {

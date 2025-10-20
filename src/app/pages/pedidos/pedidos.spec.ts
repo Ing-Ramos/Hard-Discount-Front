@@ -4,7 +4,6 @@ import { PedidosComponent } from './pedidos';
 describe('Pedidos', () => {
   let component: PedidosComponent;
   let fixture: ComponentFixture<PedidosComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PedidosComponent]
@@ -15,7 +14,6 @@ describe('Pedidos', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });

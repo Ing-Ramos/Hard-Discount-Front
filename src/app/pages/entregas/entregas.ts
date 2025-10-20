@@ -18,7 +18,6 @@ export class EntregasComponent {
   ngOnInit() {
     this.obtenerEntregas();
   }
-
   obtenerEntregas() {
     this.cargando = true;
     this.http.get('http://localhost:4000/api/entregas').subscribe({
@@ -32,7 +31,6 @@ export class EntregasComponent {
       },
     });
   }
-
   actualizarEstado(entregaId: number, nuevoEstado: string) {
     this.http
       .put(`http://localhost:4000/api/entregas/${entregaId}`, { estado: nuevoEstado })

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidosService } from '../../services/pedidos.service';
 import { AuthService } from '../../services/auth.service';
-import { ProductosService } from '../../services/productos'; // 👈 agregado
+import { ProductosService } from '../../services/productos'; 
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import { RouterModule } from '@angular/router';
@@ -39,7 +39,7 @@ export class PedidosComponent implements OnInit {
   constructor(
     private pedidosService: PedidosService,
     private authService: AuthService,
-    private productosService: ProductosService // 👈 agregado
+    private productosService: ProductosService 
   ) {}
   ngOnInit() {
     this.cargarPedidos();

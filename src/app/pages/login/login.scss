@@ -2,10 +2,8 @@ body {
   background: linear-gradient(135deg, #dbeafe, #fef9c3);
   font-family: 'Segoe UI', sans-serif;
 }
-
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
