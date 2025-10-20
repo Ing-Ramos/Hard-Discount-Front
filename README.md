@@ -1,5 +1,7 @@
 🛒 Hard Discount Frontend
+
 Este proyecto corresponde al frontend del sistema Hard Discount, una aplicación web desarrollada en Angular que permite la gestión de productos, pedidos y usuarios dentro de un entorno de comercio minorista tipo “hard discount”.
+
 🚀 Tecnologías utilizadas
 Angular CLI v20.3.5
 TypeScript
