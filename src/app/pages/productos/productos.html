@@ -1,0 +1,107 @@
+<div class="container mt-5">
+  <h3 class="text-center text-primary mb-4">
+    Lista de Productos
+  </h3>
+  <!-- Botón agregar (solo visible para administrador) -->
+  <div class="text-end mb-3" *ngIf="esAdmin">
+    <button class="btn btn-success" (click)="abrirModalAgregar()">
+      <i class="bi bi-plus-circle"></i> Agregar Producto
+    </button>
+  </div>
+  <!-- Tabla de productos -->
+  <table *ngIf="productos.length > 0" class="table table-bordered table-hover shadow-sm">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio (S/)</th>
+        <th>Stock</th>
+        <th>Activo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      <tr *ngFor="let p of productos">
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.descripcion || '—' }}</td>
+        <td>{{ p.precio | number: '1.2-2' }}</td>
+        <td>{{ p.stock }}</td>
+        <td>
+          <i
+            class="bi"
+            [ngClass]="p.activo ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'">
+          </i>
+        </td>
+        <td>
+          <!-- Editar (solo administrador) -->
+          <button *ngIf="esAdmin"
+                  class="btn btn-warning btn-sm me-2"
+                  (click)="abrirModalEditar(p)">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+
+          <!-- Eliminar (solo administrador) -->
+          <button *ngIf="esAdmin"
+                  class="btn btn-danger btn-sm"
+                  (click)="eliminar(p.id)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 🔹 Si no hay productos -->
+  <div *ngIf="productos.length === 0" class="alert alert-info text-center">
+    No hay productos registrados.
+  </div>
+  <!-- Modal (Agregar / Editar) -->
+  <div
+    class="modal fade"
+    tabindex="-1"
+    [class.show]="modalVisible"
+    style="display: block;"
+    *ngIf="modalVisible">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{ editando ? 'Editar Producto' : 'Agregar Producto' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #form="ngForm">
+            <div class="mb-3">
+              <label>Nombre:</label>
+              <input type="text" class="form-control" [(ngModel)]="formProducto.nombre" name="nombre" required />
+            </div>
+            <div class="mb-3">
+              <label>Descripción:</label>
+              <input type="text" class="form-control" [(ngModel)]="formProducto.descripcion" name="descripcion" />
+            </div>
+            <div class="mb-3">
+              <label>Precio (S/):</label>
+              <input type="number" class="form-control" [(ngModel)]="formProducto.precio" name="precio" required />
+            </div>
+            <div class="mb-3">
+              <label>Stock:</label>
+              <input type="number" class="form-control" [(ngModel)]="formProducto.stock" name="stock" required />
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="formProducto.activo" name="activo" />
+              <label class="form-check-label">Activo</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+          <button class="btn btn-primary" (click)="guardar()">
+            {{ editando ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2 class="text-primary text-center mb-4">Catálogo de Productos Disponibles</h2>
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="text-center my-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Cargando productos...</p>
+  </div>
+  <!-- Tabla de productos -->
+  <table *ngIf="!cargando && productos.length > 0" class="table table-bordered table-hover shadow-sm text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>ID Producto</th>
+        <th>Nombre</th>
+        <th>Stock Disponible</th>
+        <th>Precio Unitario (S/)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of productos">
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.stock }}</td>
+        <td>{{ p.precio | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!cargando && productos.length === 0" class="alert alert-info text-center">
+    No hay productos disponibles en este momento.
+  </div>
+</div>

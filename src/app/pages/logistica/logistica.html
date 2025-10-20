@@ -1,0 +1,97 @@
+<div class="container py-4">
+  <h2 class="text-center text-primary mb-4">
+    Panel de Logística
+  </h2>
+
+  <!-- Sección Productos -->
+  <section class="mb-5">
+    <h4 class="text-success mb-3">📦 Control de Stock</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-success">
+        <tr>
+          <th>ID</th>
+          <th>Producto</th>
+          <th>Descripción</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of productos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.descripcion }}</td>
+          <td>{{ p.stock }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Sección Pedidos -->
+  <section class="mb-5">
+    <h4 class="text-info mb-3">🧾 Gestión de Pedidos</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-info">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Estado</th>
+          <th>Fecha Pedido</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos">
+          <td>{{ pedido.id }}</td>
+          <td>{{ pedido.usuario }}</td>
+          <td>{{ pedido.estado }}</td>
+          <td>{{ pedido.fechaPedido | date:'short' }}</td>
+          <td>
+            <select
+              class="form-select d-inline-block w-auto"
+              [(ngModel)]="pedido.estado"
+              (change)="actualizarEstado(pedido.id, pedido.estado)">
+              <option>Creado</option>
+              <option>Procesando</option>
+              <option>Enviado</option>
+              <option>Entregado</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Sección Entregas -->
+  <section>
+    <h4 class="text-warning mb-3">🚛 Entregas</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-warning">
+        <tr>
+          <th>ID</th>
+          <th>Pedido</th>
+          <th>Conductor</th>
+          <th>Ruta</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of entregas">
+          <td>{{ e.id }}</td>
+          <td>{{ e.pedidoId }}</td>
+          <td>{{ e.conductor }}</td>
+          <td>{{ e.ruta }}</td>
+          <td>{{ e.estado }}</td>
+          <td>
+            <button
+              *ngIf="e.estado !== 'Entregado'"
+              (click)="marcarEntregado(e.id)"
+              class="btn btn-sm btn-success">
+              ✅ Marcar entregado
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
