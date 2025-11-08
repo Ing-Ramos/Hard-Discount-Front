@@ -43,7 +43,7 @@ export class LogisticaComponent {
       .put(`http://localhost:4000/api/pedidos/${pedidoId}`, { estado: nuevoEstado })
       .subscribe({
         next: () => {
-          alert('Estado actualizado ✅');
+          alert('Estado actualizado ');
           this.cargarPedidos();
         },
         error: (err) => console.error(err),
@@ -54,7 +54,7 @@ export class LogisticaComponent {
       .put(`http://localhost:4000/api/entregas/${entregaId}`, { estado: 'Entregado' })
       .subscribe({
         next: () => {
-          alert('Entrega marcada como completada 🚚');
+          alert('Entrega marcada como completada ');
           this.cargarEntregas();
         },
         error: (err) => console.error(err),

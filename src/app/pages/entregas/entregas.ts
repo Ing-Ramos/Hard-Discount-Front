@@ -26,7 +26,7 @@ export class EntregasComponent {
         this.cargando = false;
       },
       error: (err) => {
-        console.error('❌ Error cargando entregas:', err);
+        console.error('Error cargando entregas:', err);
         this.cargando = false;
       },
     });
@@ -36,10 +36,10 @@ export class EntregasComponent {
       .put(`http://localhost:4000/api/entregas/${entregaId}`, { estado: nuevoEstado })
       .subscribe({
         next: () => {
-          alert(`Entrega ${nuevoEstado} ✅`);
+          alert(`Entrega ${nuevoEstado} `);
           this.obtenerEntregas();
         },
-        error: (err) => console.error('❌ Error actualizando entrega:', err),
+        error: (err) => console.error('Error actualizando entrega:', err),
       });
   }
 }

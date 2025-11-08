@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const token = authService.getToken();
   // Si no hay token - redirigir al login
   if (!token) {
-    alert('⚠️ Debes iniciar sesión para acceder.');
+    alert('Debes iniciar sesión para acceder.');
     router.navigate(['/login']);
     return false;
   }
@@ -16,7 +16,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const usuario = authService.getUsuarioDesdeToken();
   // Si no se puede decodificar (token da error o expiró)
   if (!usuario) {
-    alert('⚠️ Tu sesión ha expirado. Vuelve a iniciar sesión.');
+    alert('Tu sesión ha expirado. Vuelve a iniciar sesión.');
     authService.logout();
     router.navigate(['/login']);
     return false;

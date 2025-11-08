@@ -6,7 +6,7 @@
   <div class="d-flex align-items-center gap-3">
     <!-- Mostrar el nombre del usuario si hay token -->
     <span *ngIf="auth.isLoggedIn()" class="fw-semibold text-dark">
-      👋 Bienvenido, {{ auth.getUsuarioDesdeToken()?.nombre || 'Usuario' }}
+      Bienvenido, {{ auth.getUsuarioDesdeToken()?.nombre || 'Usuario' }}
     </span>
     <!-- Botón Login / Logout -->
     <a
