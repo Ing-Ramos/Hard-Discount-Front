@@ -1,0 +1,54 @@
+<div class="dashboard-container container py-4">
+  <h2 class="text-primary fw-bold mb-4">Panel de Control — Administrador</h2>
+
+  <div class="row g-3">
+    <!-- Total Productos -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-success">
+        <div class="card-body text-center">
+          <h5 class="fw-bold text-success">Productos</h5>
+          <h2 class="fw-bold">{{ totalProductos }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pedidos -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-info">
+        <div class="card-body text-center">
+          <h5 class="fw-bold text-info">Pedidos</h5>
+          <p class="mb-1">Creados: {{ pedidosCreados }}</p>
+          <p class="mb-1">En proceso: {{ pedidosEnProceso }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entregas -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-warning">
+        <div class="card-body text-center">
+          <h5 class="fw-bold text-warning">Entregas</h5>
+          <p class="mb-1">Pendientes: {{ entregasPendientes }}</p>
+          <p class="mb-0">Completadas: {{ entregasCompletadas }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock bajo -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-danger">
+        <div class="card-body text-center">
+          <h5 class="fw-bold text-danger">Stock Bajo</h5>
+          <p *ngIf="productosStockBajo.length === 0" class="text-muted">
+            Todo en orden
+          </p>
+          <ul *ngIf="productosStockBajo.length > 0" class="list-unstyled small mb-0">
+            <li *ngFor="let p of productosStockBajo">
+              {{ p.nombre }} — <strong>{{ p.stock }}</strong> unidades
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

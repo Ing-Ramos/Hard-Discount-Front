@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidosService } from '../../services/pedidos.service';
 import { AuthService } from '../../services/auth.service';
-import { ProductosService } from '../../services/productos'; 
+import { ProductosService } from '../../services/productos.service'; 
+import { HttpClient } from '@angular/common/http'; // AGREGAR ESTO
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import { RouterModule } from '@angular/router';
@@ -36,14 +37,18 @@ export class PedidosComponent implements OnInit {
   // Paginacion
   pagina = 1;
   tamPagina = 10;
+  
   constructor(
     private pedidosService: PedidosService,
     private authService: AuthService,
-    private productosService: ProductosService 
+    private productosService: ProductosService,
+    private http: HttpClient // AGREGAR ESTO
   ) {}
+  
   ngOnInit() {
     this.cargarPedidos();
   }
+  
   // CARGAR PEDIDOS
   cargarPedidos() {
     this.cargandoPedidos = true;
@@ -56,6 +61,7 @@ export class PedidosComponent implements OnInit {
       complete: () => (this.cargandoPedidos = false)
     });
   }
+  
   // CREAR PEDIDO
   crearPedido() {
     const usuario = this.authService.getUsuarioDesdeToken();
@@ -84,13 +90,16 @@ export class PedidosComponent implements OnInit {
       }
     });
   }
+  
   // Agregar producto sin valores por defecto
   agregarProducto() {
     this.nuevoPedido.productos.push({ id: null, cantidad: null, precio: null });
   }
+  
   eliminarProducto(i: number) {
     this.nuevoPedido.productos.splice(i, 1);
   }
+  
   // Buscar producto y asignar precio automáticamente
   buscarProductoPorId(index: number) {
     const producto = this.nuevoPedido.productos[index];
@@ -106,25 +115,54 @@ export class PedidosComponent implements OnInit {
       }
     });
   }
-  // EDITAR PEDIDO
+  
+  // EDITAR PEDIDO - AQUÍ ES DONDE AGREGAMOS LA LÓGICA
   editarPedido(pedido: any) {
     this.pedidoEditando = { ...pedido };
   }
+  
   cancelarEdicion() {
     this.pedidoEditando = null;
   }
-  guardarCambios() {
-    if (!this.pedidoEditando) return;
-    const payload = { estado: this.pedidoEditando.estado };
-    this.pedidosService.updatePedido(this.pedidoEditando.id, payload).subscribe({
-      next: (res: any) => {
-        alert(res.msg);
-        this.pedidoEditando = null;
-        this.cargarPedidos();
+  
+guardarCambios() {
+  if (!this.pedidoEditando) return;
+  
+  const estadoAnterior = this.pedidos.find(p => p.id === this.pedidoEditando.id)?.estado;
+  const nuevoEstado = this.pedidoEditando.estado;
+  
+  const payload = { estado: nuevoEstado };
+  
+  this.pedidosService.updatePedido(this.pedidoEditando.id, payload).subscribe({
+    next: (res: any) => {
+    
+      if (estadoAnterior === 'creado' && nuevoEstado === 'procesando') {
+        this.crearEntregaAutomatica(this.pedidoEditando.id);
+        alert('Pedido actualizado a Procesando y entrega creada automáticamente'); 
+      } else {
+        alert(res.msg); 
+      }
+      
+      this.pedidoEditando = null;
+      this.cargarPedidos();
+    },
+    error: (err) => alert(err?.error?.msg || 'Error al actualizar pedido')
+  });
+}
+ crearEntregaAutomatica(pedidoId: number) {
+  this.http.post('http://localhost:4000/api/entregas/desde-pedido', { pedidoId })
+    .subscribe({
+      next: (response: any) => {
+        console.log('Entrega creada:', response);
       },
-      error: (err) => alert(err?.error?.msg || 'Error al actualizar pedido')
+      error: (err) => {
+        console.error('Error:', err);
+        if (err.status !== 200 && err.status !== 201) {
+          console.warn('Hubo un problema al crear la entrega, pero puede haberse creado');
+        }
+      }
     });
-  }
+}
   // ELIMINAR PEDIDO
   eliminarPedido(id: number) {
     if (!confirm('¿Seguro que deseas eliminar este pedido?')) return;
@@ -136,6 +174,7 @@ export class PedidosComponent implements OnInit {
       error: (err) => alert(err?.error?.msg || 'Error al eliminar pedido')
     });
   }
+  
   // VER DETALLES (MODAL)
   verDetalle(pedido: any) {
     this.pedidoSeleccionado = pedido;
@@ -150,14 +189,17 @@ export class PedidosComponent implements OnInit {
       }
     });
   }
+  
   get totalPedido(): number {
     return this.itemsDelPedido.reduce((acc, item) => acc + (item.subtotal || 0), 0);
   }
+  
   cerrarModal() {
     this.modalAbierto = false;
     this.itemsDelPedido = [];
     this.pedidoSeleccionado = null;
   }
+  
   // FILTROS DE PEDIDOS
   get pedidosFiltrados() {
     return this.pedidos.filter((p) => {
@@ -171,27 +213,34 @@ export class PedidosComponent implements OnInit {
       return porUsuario && porFecha && porEstado;
     });
   }
+  
   // PAGINACON
   get totalPaginas() {
     return Math.max(1, Math.ceil(this.pedidosFiltrados.length / this.tamPagina));
   }
+  
   get paginaActual() {
     return Math.min(this.pagina, this.totalPaginas);
   }
+  
   get pedidosPaginados() {
     const start = (this.paginaActual - 1) * this.tamPagina;
     return this.pedidosFiltrados.slice(start, start + this.tamPagina);
   }
+  
   // ROLES (para mostrar según permisos)
   get esAdmin() {
     return this.authService.hasRole('administrador');
   }
+  
   get esLogistica() {
     return this.authService.hasRole('logistica');
   }
+  
   get esCliente() {
     return this.authService.hasRole('cliente');
   }
+  
   exportarPDF() {
     const doc = new jsPDF();
     doc.setFontSize(14);

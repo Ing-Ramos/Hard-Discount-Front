@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:4000/api/auth'; 
   constructor(private http: HttpClient) {}
-  // ---- HTTP ----
+  
   login(cred: { correo: string; password: string }) {
-    // backend debe responder { token: '...' } o { msg, token }
+    
     return this.http.post<{ token: string; msg?: string }>(`${this.apiUrl}/login`, cred);
   }
-  // ---- Token storage ----
+
+  register(data: { nombre: string; correo: string; password: string; rol?: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, data);
+  }
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -21,7 +25,16 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
   }
-  // ---- Helpers ----
+  getDecoded(): any | null {
+  const token = this.getToken();
+  if (!token) return null;
+  try {
+    return jwtDecode(token);
+  } catch {
+    return null;
+  }
+}
+  // Helpers
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
@@ -29,7 +42,7 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return null;
     try {
-      return jwtDecode(token); // debe contener al menos { id, nombre, rol, ...}
+      return jwtDecode(token); 
     } catch (err) {
       console.error('Error al decodificar token:', err);
       return null;

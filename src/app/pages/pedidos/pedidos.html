@@ -120,8 +120,8 @@
           </td>
           <td>{{ pedido.fechaPedido | date: 'dd/MM/yyyy HH:mm' }}</td>
           <td>
-            <button class="btn btn-success btn-sm me-1" (click)="guardarCambios()"></button>
-            <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion()"></button>
+            <button class="btn btn-success btn-sm me-1" (click)="guardarCambios()">✔️</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion()">❌</button>
           </td>
         </ng-container>
         <ng-template #modoNormal>

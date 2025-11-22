@@ -1,18 +1,29 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './pages/login/login';
+import { RegisterComponent } from './pages/register/register';
+import { CatalogoComponent } from './pages/catalogo/catalogo';
 import { ProductosComponent } from './pages/productos/productos';
 import { PedidosComponent } from './pages/pedidos/pedidos';
 import { EntregasComponent } from './pages/entregas/entregas';
-import { LoginComponent } from './pages/login/login';
+import { LogisticaComponent } from './pages/logistica/logistica';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
-import { CatalogoComponent } from './pages/catalogo/catalogo';
-import { LogisticaComponent } from './pages/logistica/logistica'; 
 
 export const routes: Routes = [
-  // Ruta pública
+  // Rutas públicas
   { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegisterComponent },
   { path: 'catalogo', component: CatalogoComponent },
-  // Rutas protegidas por autenticación
+
+  // Dashboard solo ADMIN
+  { 
+  path: 'dashboard', 
+  component: AdminDashboardComponent, 
+  canActivate: [authGuard, roleGuard], 
+  data: { roles: ['administrador'] } 
+  },
+  // Rutas protegidas
   {
     path: 'productos',
     component: ProductosComponent,
@@ -34,9 +45,10 @@ export const routes: Routes = [
     path: 'logistica',
     component: LogisticaComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['logistica', 'administrador'] } 
+    data: { roles: ['logistica', 'administrador'] }
   },
+
   // Redirecciones
-  { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
-  { path: '**', redirectTo: '/pedidos' }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }, 
+  { path: '**', redirectTo: '/dashboard' }
 ];

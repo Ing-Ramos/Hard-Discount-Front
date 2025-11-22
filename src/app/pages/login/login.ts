@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'] 
 })
@@ -32,7 +32,16 @@ export class LoginComponent {
           return;
         }
         this.auth.setToken(res.token);
-        this.router.navigateByUrl('/pedidos');
+
+         const rol = this.auth.getRol?.() || this.auth.getUsuarioDesdeToken()?.rol;
+
+        if (rol === 'administrador') {
+        this.router.navigate(['/dashboard']);
+        } else if (rol === 'logistica') {
+        this.router.navigate(['/entregas']);
+        } else {
+        this.router.navigate(['/pedidos']);
+      }
       },
       error: (err) => {
         this.errorMsg = err?.error?.msg || 'Credenciales inválidas.';

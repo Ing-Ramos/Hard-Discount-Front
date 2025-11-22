@@ -1,11 +1,16 @@
-body {
-  background: linear-gradient(135deg, #dbeafe, #fef9c3);
-  font-family: 'Segoe UI', sans-serif;
-}
-.card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+.register-link {
+  text-align: center;
+  margin-top: 10px;
+
+  a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
   }
 }

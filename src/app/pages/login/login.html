@@ -1,14 +1,14 @@
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
   <div class="card shadow-lg p-4" style="width: 400px; border-radius: 15px;">
     <h3 class="text-center mb-4 text-primary fw-bold">
-      <i class="bi bi-box-seam me-2"></i> HardDiscount
+      <i></i> HardDiscount
     </h3>
     <h5 class="text-center mb-3 fw-semibold">Iniciar sesión</h5>
-    <!-- Alerta de error -->
+
     <div *ngIf="errorMsg" class="alert alert-danger text-center py-2">
       {{ errorMsg }}
     </div>
-    <!-- Formulario -->
+
     <form (ngSubmit)="ingresar()">
       <div class="mb-3">
         <label for="correo" class="form-label fw-semibold">Correo</label>
@@ -22,6 +22,7 @@
           required
         />
       </div>
+
       <div class="mb-3">
         <label for="password" class="form-label fw-semibold">Contraseña</label>
         <input
@@ -34,6 +35,7 @@
           required
         />
       </div>
+
       <button
         type="submit"
         class="btn btn-primary w-100 fw-semibold mt-2"
@@ -42,6 +44,11 @@
         <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2"></span>
         Ingresar
       </button>
+      <div class="text-center mt-3">
+        <a routerLink="/registro" class="text-decoration-none text-primary fw-semibold">
+          ¿No tienes cuenta? Regístrate aquí
+        </a>
+      </div>
     </form>
     <div class="text-center mt-3">
       <small class="text-muted">

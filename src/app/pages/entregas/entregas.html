@@ -1,50 +1,53 @@
-<div class="container mt-5">
-  <h3 class="text-warning text-center mb-4">
-    <i class="bi bi-truck"></i> Gestión de Entregas
-  </h3>
-  <div *ngIf="cargando" class="text-center my-4">
-    <div class="spinner-border text-warning" role="status"></div>
-    <p>Cargando entregas...</p>
-  </div>
-  <table *ngIf="!cargando && entregas.length > 0" class="table table-bordered table-hover shadow-sm">
-    <thead class="table-warning text-center">
-      <tr>
-        <th>ID</th>
-        <th>Pedido</th>
-        <th>Conductor</th>
-        <th>Ruta</th>
-        <th>Estado</th>
-        <th>Fecha Entrega</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let entrega of entregas">
-        <td>{{ entrega.id }}</td>
-        <td>{{ entrega.pedidoId }}</td>
-        <td>{{ entrega.conductor || 'Sin asignar' }}</td>
-        <td>{{ entrega.ruta || '—' }}</td>
-        <td>
-          <select class="form-select" [(ngModel)]="entrega.estado" (change)="actualizarEstado(entrega.id, entrega.estado)">
-            <option>Pendiente</option>
-            <option>En camino</option>
-            <option>Entregado</option>
-          </select>
-        </td>
-        <td>{{ entrega.fechaEntrega | date:'short' }}</td>
-        <td>
-          <button
-            *ngIf="entrega.estado !== 'Entregado'"
-            class="btn btn-success btn-sm"
-            (click)="actualizarEstado(entrega.id, 'Entregado')">
-            Marcar entregado
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="cargando" class="loading-container">
+  <p>Cargando entregas...</p>
+  <div class="spinner"></div>
+</div>
 
-  <div *ngIf="!cargando && entregas.length === 0" class="text-center text-muted mt-4">
-    <p>No hay entregas registradas.</p>
-  </div>
+<table *ngIf="!cargando && entregas.length > 0" class="entregas-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Pedido ID</th>
+      <th>Cliente</th>
+      <th>Fecha Programada</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entrega of entregas">
+      <td>{{ entrega.id }}</td>
+      <td>{{ entrega.pedidoId }}</td>
+      <td>{{ entrega.cliente }}</td>
+      <td>{{ entrega.fechaProgramada | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td [ngClass]="{
+        'pendiente': entrega.estado === 'Pendiente', 
+        'procesando': entrega.estado === 'Procesando', 
+        'entregado': entrega.estado === 'Entregado'
+      }">
+        {{ entrega.estado }}
+      </td>
+      <td>
+        <button 
+          *ngIf="entrega.estado === 'Pendiente'" 
+          class="action-btn btn-procesando" 
+          (click)="actualizarEstado(entrega.id, 'Procesando')">
+          Marcar como Procesando
+        </button>
+        <button 
+          *ngIf="entrega.estado === 'Procesando'" 
+          class="action-btn btn-entregado" 
+          (click)="actualizarEstado(entrega.id, 'Entregado')">
+          Marcar como Entregado
+        </button>
+        <span *ngIf="entrega.estado === 'Entregado'" class="badge-entregado">
+          ✓ Entregado
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!cargando && entregas.length === 0" class="no-data">
+  <p>No hay entregas registradas.</p>
 </div>

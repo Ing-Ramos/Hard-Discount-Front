@@ -7,30 +7,47 @@ import { Producto } from '../models/producto.model';
   providedIn: 'root'
 })
 export class ProductosService {
-  // URL del backend (asegurar que el backend esté corriendo en este puerto)
   private apiUrl = 'http://localhost:4000/api/productos';
   constructor(private http: HttpClient) {}
-  // Obtener todos los productos
   getAll(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl);
   }
-  // Obtener un producto por ID
   getById(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.apiUrl}/${id}`);
   }
-  // Crear nuevo producto
   create(producto: Producto): Observable<any> {
     return this.http.post(this.apiUrl, producto);
   }
-  // Actualizar un producto existente
   update(id: number, producto: Producto): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, producto);
   }
-  // Eliminar un producto
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
   getProductoPorId(id: number): Observable<any> {
-  return this.http.get(`${this.apiUrl}/${id}`);
-}
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+  getTotalProductos(): Observable<number> {
+    return new Observable<number>((observer) => {
+      this.getAll().subscribe({
+        next: (productos) => {
+          observer.next(productos.length);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
+  getProductosConStockBajo(limite: number = 10): Observable<Producto[]> {
+    return new Observable<Producto[]>((observer) => {
+      this.getAll().subscribe({
+        next: (productos) => {
+          const filtrados = productos.filter((p) => p.stock <= limite);
+          observer.next(filtrados);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
 }

@@ -15,21 +15,29 @@ import { filter } from 'rxjs/operators';
 export class App {
   protected readonly title = signal('frontend');
   mostrarNavbar = true; 
-  constructor(public auth: AuthService, private router: Router) {
-    // Detectar cambios de ruta para ocultar el navbar en /login o /register
+ constructor(public auth: AuthService, private router: Router) {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.mostrarNavbar = !(
-          event.url.includes('/login') ||
-          event.url.includes('/register')
-        );
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects;
+
+        // Rutas donde NO queremos ver el navbar
+        const rutasSinNavbar = ['/login', '/registro'];
+
+        this.mostrarNavbar = !rutasSinNavbar.some(r => url.startsWith(r));
       });
   }
   // Saber si el usuario tiene rol de cliente
   get esCliente(): boolean {
     return this.auth.hasRole('cliente');
   }
+   // Admin o Logística (estos sí verán el header)
+  get esAdminOLogistica(): boolean {
+    return this.auth.hasRole(['administrador', 'logistica']);
+  }
+  get esAdmin(): boolean {
+  return this.auth.hasRole(['administrador']);
+}
   // Cerrar sesión
   logout() {
     this.auth.logout();
