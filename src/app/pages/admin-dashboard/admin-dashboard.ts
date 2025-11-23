@@ -9,17 +9,15 @@ import { Producto } from '../../models/producto.model';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './admin-dashboard.html',
   styleUrls: ['./admin-dashboard.scss'],
 })
 export class AdminDashboardComponent implements OnInit {
   totalProductos = 0;
-
   pedidosCreados = 0;
   pedidosEnProceso = 0;
   pedidosCompletados = 0;
-
   entregasPendientes = 0;
   entregasCompletadas = 0;
 

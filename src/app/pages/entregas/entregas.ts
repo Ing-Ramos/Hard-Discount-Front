@@ -23,7 +23,6 @@ export class EntregasComponent {
     this.cargando = true;
     this.http.get<any[]>('http://localhost:4000/api/entregas').subscribe({
       next: (data) => {
-        console.log('Entregas recibidas:', data); 
         this.entregas = data;
         this.cargando = false;
       },

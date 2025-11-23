@@ -2,13 +2,13 @@
   <p>Cargando entregas...</p>
   <div class="spinner"></div>
 </div>
-
 <table *ngIf="!cargando && entregas.length > 0" class="entregas-table">
   <thead>
     <tr>
       <th>ID</th>
       <th>Pedido ID</th>
       <th>Cliente</th>
+      <th>Dirección</th>
       <th>Fecha Programada</th>
       <th>Estado</th>
       <th>Acciones</th>
@@ -19,29 +19,36 @@
       <td>{{ entrega.id }}</td>
       <td>{{ entrega.pedidoId }}</td>
       <td>{{ entrega.cliente }}</td>
+      <td>{{ entrega.direccion }}</td>
       <td>{{ entrega.fechaProgramada | date:'dd/MM/yyyy HH:mm' }}</td>
       <td [ngClass]="{
         'pendiente': entrega.estado === 'Pendiente', 
-        'procesando': entrega.estado === 'Procesando', 
+        'enviado': entrega.estado === 'Enviado',
         'entregado': entrega.estado === 'Entregado'
       }">
         {{ entrega.estado }}
       </td>
       <td>
+        <div *ngIf="entrega.estado === 'Pendiente'" class="botones-acciones">
+          <button 
+            class="action-btn btn-enviado" 
+            (click)="actualizarEstado(entrega.id, 'Enviado')">
+            Marcar como Enviado
+          </button>
+          <button 
+            class="action-btn btn-entregado" 
+            (click)="actualizarEstado(entrega.id, 'Entregado')">
+            Marcar como Entregado
+          </button>
+        </div>
         <button 
-          *ngIf="entrega.estado === 'Pendiente'" 
-          class="action-btn btn-procesando" 
-          (click)="actualizarEstado(entrega.id, 'Procesando')">
-          Marcar como Procesando
-        </button>
-        <button 
-          *ngIf="entrega.estado === 'Procesando'" 
+          *ngIf="entrega.estado === 'Enviado'" 
           class="action-btn btn-entregado" 
           (click)="actualizarEstado(entrega.id, 'Entregado')">
           Marcar como Entregado
         </button>
         <span *ngIf="entrega.estado === 'Entregado'" class="badge-entregado">
-          ✓ Entregado
+          Entregado
         </span>
       </td>
     </tr>
