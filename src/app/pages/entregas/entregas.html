@@ -8,7 +8,6 @@
       <th>ID</th>
       <th>Pedido ID</th>
       <th>Cliente</th>
-      <th>Dirección</th>
       <th>Fecha Programada</th>
       <th>Estado</th>
       <th>Acciones</th>
@@ -19,35 +18,39 @@
       <td>{{ entrega.id }}</td>
       <td>{{ entrega.pedidoId }}</td>
       <td>{{ entrega.cliente }}</td>
-      <td>{{ entrega.direccion }}</td>
       <td>{{ entrega.fechaProgramada | date:'dd/MM/yyyy HH:mm' }}</td>
       <td [ngClass]="{
-        'pendiente': entrega.estado === 'Pendiente', 
-        'enviado': entrega.estado === 'Enviado',
-        'entregado': entrega.estado === 'Entregado'
+        'pendiente': entrega.estado === 'pendiente', 
+        'enviado': entrega.estado === 'enviado',
+        'entregado': entrega.estado === 'entregado'
       }">
         {{ entrega.estado }}
       </td>
       <td>
-        <div *ngIf="entrega.estado === 'Pendiente'" class="botones-acciones">
+        <!-- Botones para estado PENDIENTE -->
+        <div *ngIf="entrega.estado === 'pendiente'" class="botones-acciones">
           <button 
             class="action-btn btn-enviado" 
-            (click)="actualizarEstado(entrega.id, 'Enviado')">
+            (click)="actualizarEstado(entrega.id, 'enviado')">
             Marcar como Enviado
           </button>
           <button 
             class="action-btn btn-entregado" 
-            (click)="actualizarEstado(entrega.id, 'Entregado')">
+            (click)="actualizarEstado(entrega.id, 'entregado')">
             Marcar como Entregado
           </button>
         </div>
+
+        <!-- Botón para estado ENVIADO -->
         <button 
-          *ngIf="entrega.estado === 'Enviado'" 
+          *ngIf="entrega.estado === 'enviado'" 
           class="action-btn btn-entregado" 
-          (click)="actualizarEstado(entrega.id, 'Entregado')">
+          (click)="actualizarEstado(entrega.id, 'entregado')">
           Marcar como Entregado
         </button>
-        <span *ngIf="entrega.estado === 'Entregado'" class="badge-entregado">
+
+        <!-- Badge para estado ENTREGADO -->
+        <span *ngIf="entrega.estado === 'entregado'" class="badge-entregado">
           Entregado
         </span>
       </td>

@@ -37,6 +37,7 @@ export class PedidosComponent implements OnInit {
 
   // Modal QR Yape
   modalQRAbierto = false;
+  montoAPagar: number = 0;
 
   // Filtros
   filtroUsuario = '';
@@ -87,10 +88,22 @@ export class PedidosComponent implements OnInit {
       return;
     }
 
+    // Validar que todos los productos tengan datos completos
+    const productosInvalidos = this.nuevoPedido.productos.filter(
+      p => !p.id || !p.cantidad || !p.precio || p.cantidad <= 0
+    );
+
+    if (productosInvalidos.length > 0) {
+      alert('Todos los productos deben tener ID, cantidad válida y precio.');
+      return;
+    }
+
     const pedido = {
       usuarioId: usuario.id,
       productos: this.nuevoPedido.productos
     };
+
+    console.log('Enviando pedido:', pedido);
 
     this.pedidosService.createPedido(pedido).subscribe({
       next: (res: any) => {
@@ -98,7 +111,10 @@ export class PedidosComponent implements OnInit {
         this.nuevoPedido = { productos: [{ id: null, cantidad: null, precio: null }] };
         this.cargarPedidos();
       },
-      error: () => alert('Error al crear pedido')
+      error: (err) => {
+        console.error('Error completo:', err);
+        alert('Error al crear pedido: ' + (err.error?.msg || err.message));
+      }
     });
   }
 
@@ -143,7 +159,6 @@ export class PedidosComponent implements OnInit {
   
     this.pedidosService.updatePedido(this.pedidoEditando.id, payload).subscribe({
       next: (res: any) => {
-    
         if (estadoAnterior === 'creado' && nuevoEstado === 'procesando') {
           this.crearEntregaAutomatica(this.pedidoEditando.id);
           alert('Pedido actualizado y entrega creada.');
@@ -163,10 +178,23 @@ export class PedidosComponent implements OnInit {
       .subscribe();
   }
 
-  // ABRE EL MODAL DE PAGO
+  // ABRE EL MODAL DE PAGO Y CALCULA EL MONTO
   confirmarCompra(idPedido: number) {
     this.pedidoParaPagar = idPedido;
-    this.modalPagoAbierto = true;
+    
+    // Obtener el pedido y calcular el monto
+    this.pedidosService.getPedidoItems(idPedido).subscribe({
+      next: (items) => {
+        this.montoAPagar = items.reduce((acc: number, item: any) => 
+          acc + (item.subtotal || 0), 0
+        );
+        this.modalPagoAbierto = true;
+      },
+      error: (err) => {
+        console.error('Error al obtener items del pedido:', err);
+        alert('Error al calcular el monto del pedido');
+      }
+    });
   }
 
   // CERRAR MODAL MÉTODO DE PAGO
@@ -179,7 +207,7 @@ export class PedidosComponent implements OnInit {
   procesarPago(metodo: string) {
     if (!this.pedidoParaPagar) return;
 
-    // PAGO CONTRAENTREGA → se registra directamente
+    // PAGO CONTRAENTREGA
     if (metodo === "contraentrega") {
       this.pedidosService.confirmarPago(this.pedidoParaPagar, metodo)
         .subscribe({
@@ -195,16 +223,18 @@ export class PedidosComponent implements OnInit {
       return;
     }
 
-    // YAPE 
+    // YAPE - Abrir modal con QR estático
     if (metodo === "yape") {
       this.modalPagoAbierto = false;
       this.modalQRAbierto = true;
     }
   }
 
-  // CERRAR MODAL QR
+  // CERRAR MODAL QR Y LIMPIAR VARIABLES
   cerrarModalQR() {
     this.modalQRAbierto = false;
+    this.montoAPagar = 0;
+    this.pedidoParaPagar = null;
   }
 
   // CONFIRMAR PAGO YAPE
@@ -215,7 +245,7 @@ export class PedidosComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           alert(res.msg);
-          this.modalQRAbierto = false;
+          this.cerrarModalQR();
           this.cargarPedidos();
         },
         error: (err) => {
@@ -295,10 +325,12 @@ export class PedidosComponent implements OnInit {
   get esCliente() {
     return this.authService.hasRole('cliente');
   }
+
   onImageError(event: any) {
-  console.error('Error cargando imagen:', event);
-  console.log('Ruta intentada:', event.target.src);
-}
+    console.error('Error cargando imagen:', event);
+    console.log('Ruta intentada:', event.target.src);
+  }
+
   exportarPDF() {
     const doc = new jsPDF();
     doc.setFontSize(14);

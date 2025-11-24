@@ -2,12 +2,14 @@
   <h3 class="text-center text-primary mb-4">
     Lista de Productos
   </h3>
-  <!-- Botón agregar (solo visible para administrador) -->
-  <div class="text-end mb-3" *ngIf="esAdmin">
+
+  <!-- Botón agregar (visible para administrador Y logística) -->
+  <div class="text-end mb-3" *ngIf="esAdmin || esLogistica">
     <button class="btn btn-success" (click)="abrirModalAgregar()">
       <i class="bi bi-plus-circle"></i> Agregar Producto
     </button>
   </div>
+
   <!-- Tabla de productos -->
   <table *ngIf="productos.length > 0" class="table table-bordered table-hover shadow-sm">
     <thead class="table-dark text-center">
@@ -35,27 +37,29 @@
           </i>
         </td>
         <td>
-          <!-- Editar (solo administrador) -->
-          <button *ngIf="esAdmin"
-                  class="btn btn-warning btn-sm me-2"
-                  (click)="abrirModalEditar(p)">
-            <i class="">Editar</i>
+          <!-- Editar (administrador O logística) -->
+          <button *ngIf="esAdmin || esLogistica"
+           class="btn btn-warning btn-sm me-2"
+          (click)="abrirModalEditar(p)">
+            Editar
           </button>
 
           <!-- Eliminar (solo administrador) -->
-          <button *ngIf="esAdmin"
-                  class="btn btn-danger btn-sm"
-                  (click)="eliminar(p.id)">
-            <i class=""> Eliminar </i>
+          <button *ngIf="esAdmin || esLogistica"
+          class="btn btn-danger btn-sm"
+          (click)="eliminar(p.id)">
+          Eliminar
           </button>
         </td>
       </tr>
     </tbody>
   </table>
+
   <!-- Si no hay productos -->
   <div *ngIf="productos.length === 0" class="alert alert-info text-center">
     No hay productos registrados.
   </div>
+
   <!-- Modal (Agregar / Editar) -->
   <div
     class="modal fade"

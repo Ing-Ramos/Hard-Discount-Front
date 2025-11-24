@@ -28,7 +28,7 @@ export const routes: Routes = [
     path: 'productos',
     component: ProductosComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['administrador'] }
+    data: { roles: ['administrador','logistica'] }
   },
   {
     path: 'pedidos',
